@@ -1,0 +1,326 @@
+syntax on
+colorscheme atom-dark-256
+set nocp
+autocmd BufNewFile,BufRead *.yml set tabstop=2
+autocmd BufNewFile,BufRead *.fuse set filetype=lua
+autocmd BufNewFile,BufRead *.comp set filetype=lua
+autocmd BufNewFile,BufRead *.fu set filetype=lua
+autocmd BufNewFile,BufRead *.layout set filetype=lua
+autocmd BufNewFile,BufRead *.atom set filetype=lua
+autocmd BufNewFile,BufRead *.scriptlib set filetype=lua
+au BufRead,BufNewFile *.md setlocal textwidth=40
+nmap <F5> :w:py3file % <cr>
+nmap <F11> :!start explorer /e,%:p:h<CR>
+
+" paste yanked clipboard
+set clipboard^=unnamed,unnamedplus
+
+
+if has("clipboard")
+    " CTRL-X and SHIFT-Del are Cut
+    vnoremap <C-X> "+x
+    " vnoremap <S-Del> "+x
+    " CTRL-C and CTRL-Insert are Copy
+    vnoremap <C-C> "+y
+    " vnoremap <C-Insert> "+y
+    " CTRL-V and SHIFT-Insert are Paste
+    map <C-V>		"+gP
+    " map <S-Insert>		"+gP
+    inoremap <ESC><C-V> "+gP
+    cmap <C-V>		<C-R>+
+    " cmap <S-Insert>		<C-R>+
+endif
+
+if 1
+    exe 'inoremap <script> <C-V> <C-G>u' . paste#paste_cmd['i']
+    exe 'vnoremap <script> <C-V> ' . paste#paste_cmd['v']
+endif
+
+imap <S-Insert>		<C-V>
+vmap <S-Insert>		<C-V>
+
+" save ctrl+s
+noremap <C-S>		:update<CR>
+vnoremap <C-S>		<C-C>:update<CR>
+inoremap <C-S>		<Esc>:update<CR>gi
+
+" Use CTRL-Q to do what CTRL-V used to do
+noremap <C-Q>		<C-V>
+
+set nu
+set formatoptions-=t
+set autochdir
+set guifont=Fira\ Code:h11
+set linespace=6
+set lines=35 columns=140
+set guioptions-=T "remove toolbar"
+set guioptions-=r "remove scrollbar"
+set guioptions-=L "remove scrollbar"
+set guioptions-=m "remove menu
+set encoding=utf-8
+set fileencoding=utf-8
+set noswapfile
+set nobackup
+set noundofile
+set wrap
+set wrapmargin=0
+set linebreak
+" ---------------------------------------------------
+" configure editor with tabs and nice stuff...
+" ---------------------------------------------------
+set tabstop=4
+set expandtab
+set softtabstop=4
+set shiftwidth=4
+set textwidth=120
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+"--------- switch windows  -----------"
+nnoremap <C-right> <c-w>l
+nnoremap <C-left>  <c-w>h
+nnoremap <C-up>    <c-w>k
+nnoremap <C-down>  <c-w>j
+imap <C-right> <ESC><c-w>l
+imap <C-left>  <ESC><c-w>h
+imap <C-up>    <ESC><c-w>k
+imap <C-down>  <ESC><c-w>j
+
+" make backspaces more powerfull
+set backspace=indent,eol,start
+
+" --------- replace all  -----------
+
+set ignorecase
+set cmdheight=1
+set hlsearch
+set incsearch
+set encoding=utf8
+" ---------russian-----------
+set keymap=russian-jcukenwin 
+set iminsert=0                  " default english keyboard
+set imsearch=0                  " default english search
+
+
+" highlight lCursor guifg=NONE guibg=Cyan
+
+" Specify a directory for plugins
+" - For Neovim: ~/.local/share/nvim/plugged
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('$HOME/vimfiles/plugged')
+" Plug 'cakebaker/scss-syntax.vim'
+" Plug 'chrisbra/Colorizer'
+" Plug 'henrik/vim-reveal-in-finder'
+" Plug 'udalov/kotlin-vim'
+" Plug 'vim-airline/vim-airline-themes'
+" Plug 'JamshedVesuna/vim-markdown-preview'
+" Plug 'airblade/vim-gitgutter'
+Plug 'psf/black'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'honza/vim-snippets'
+Plug 'jiangmiao/auto-pairs'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/gv.vim'
+" Plug 'lepture/vim-jinja'
+Plug 'plytophogy/vim-virtualenv'
+Plug 'python-mode/python-mode'
+Plug 'PProvost/vim-ps1'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+" Plug 'severin-lemaignan/vim-minimap'
+Plug 'SirVer/ultisnips'
+" Plug 'thaerkh/vim-workspace'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'unkiwii/vim-nerdtree-sync'
+Plug 'Valloric/YouCompleteMe'
+Plug 'vim-scripts/AutoClose'
+Plug 'wakatime/vim-wakatime'
+" Plug 'neoclide/coc.nvim',
+  "{'tag': '*', 'do': { -> coc#util#install()}}
+
+
+
+" Initialize plugin system
+call plug#end()
+
+
+filetype on
+filetype plugin indent on
+set nofoldenable    " disable folding
+
+let mapleader = ','
+
+"search-replace current word
+nnoremap <Leader>g :%s/\<<C-r><C-w>\>/
+
+
+"------------ plugins settings --------------"
+
+"------------ CTRL P -------------"
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s --nocolor -g ""'
+endif
+" ctrlp ignore .git
+let g:ctrlp_custom_ignore = {
+  \ 'dir': 'node_modules\|DS_Store\|.git'
+  \ }
+" ctrlp start in MRU
+let g:ctrlp_cmd = 'CtrlPMRU'
+let g:ctrlp_working_path_mode = 'r'
+" ctrlp help 
+" helptags ~/.vim/bundle/ctrlp.vim/doc
+
+"-------------------ultisnips-----------------"
+" UltiSnips triggering
+let g:UltiSnipsExpandTrigger = '<C-j>'
+let g:UltiSnipsJumpForwardTrigger = '<C-j>'
+let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
+let g:UltiSnipsListSnippets="<c-s-tab>"
+let g:UltiSnipsUsePythonVersion=3
+
+"----------Pymode -------------"
+
+let g:pymode_python = 'python3'
+let g:pymode = 1
+let g:pymode_syntax = 0
+" let g:pymode_lint_ignore = ["E501","W"]
+let g:pymode_lint_ignore = ["E0602","E501","W"]
+let g:pymode_rope = 0
+let g:pymode_lint_options_pep8 =
+        \ {'max_line_length': 88}
+let g:pymode_rope_completion = 0
+let g:pymode_rope_autoimport = 0
+let g:pymode_options_colorcolumn = 0
+set pythonthreedll=C:\Users\abogomolov\AppData\Local\Programs\Python\Python36\python36.dll
+
+"--------- YCM completer ----------"
+
+let g:ycm_autoclose_preview_window_after_completion=1
+let g:ycm_semantic_triggers = {
+            \ 'python': ['re!\w{2}']
+            \ }
+
+" ---------nerd commenter options-----------
+let g:NERDSpaceDelims = 1
+let g:NERDDefaultAlign = 'left'
+let g:NERDCustomDelimiters = {
+      \ 'python': { 'left': '#', 'right': '' }
+      \ }
+let g:NERDCompactSexyComs = 1
+nmap <C-_> <leader>c<Space>
+vmap <C-_> <leader>c<Space>
+
+"------------ NerdTREE ---------- "
+ 
+let g:NERDSpaceDelims = 1
+let g:NERDCompactSexyComs = 1
+let NERDDefaultAlign = 'left'
+let g:NERDCustomDelimiters = {
+      \ 'python': { 'left': '#', 'right': '' }
+      \ }
+let NERDTreeIgnore = [
+            \ '\.DS_Store$',
+            \ '.git',
+            \ '__pycache__',
+            \ '__pycache__',
+            \ '.ropeproject'
+            \ ]
+let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
+let g:NERDTreeHighlightCursorline = 1
+let g:NERDTreeWinSize = 28     
+let NERDTreeQuitOpen = 1
+let NERDTreeAutoDeleteBuffer = 0            "detele buffer of deleted file
+"--------- autoclose if NT is the last window -----------
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"--------- prettify nerdtree -----------
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
+" ---------toggle nerdtree-----------
+map <F6> :NERDTreeToggle<CR>
+
+
+" ---------toggle relative numbering-----------
+function! g:ToggleNuMode()
+  if (&rnu == 1)
+     set nornu
+  else
+    set rnu
+  endif
+endfunction
+nnoremap <silent><c-l> :call g:ToggleNuMode()<cr>
+
+" do not comment inserted line
+set formatoptions-=r
+set formatoptions-=o
+
+"resets the _last search pattern_ register by hitting return
+nmap <cr> :noh<cr>
+
+" source $VIMRUNTIME/mswin.vim
+" behave mswin
+set selection=inclusive
+"set menu language
+source $VIMRUNTIME/delmenu.vim
+source $VIMRUNTIME/menu.vim
+nmap <C-a> <A-a>
+nmap <C-x> <A-x>
+set langmenu=en_US
+let $LANG = 'en_US'
+
+" toggle spelling use \s
+imap <Leader>s <C-o>:setlocal spell! spelllang=ru_ru,en_us<CR>
+nnoremap <Leader>s :setlocal spell! spelllang=ru_ru,en_us<CR>
+
+" ---------trim spaces-----------
+function! ShowSpaces(...)
+  let @/='\v(\s+$)|( +\ze\t)'
+  let oldhlsearch=&hlsearch
+  " trigger ShowSpaces on/off:
+  if a:0
+   let &hlsearch=!&hlsearch
+  else
+   let &hlsearch=a:1
+  end
+  return oldhlsearch
+endfunction
+
+function! TrimSpaces() range
+   let oldhlsearch=ShowSpaces(1)
+   execute a:firstline.",".a:lastline."substitute ///gec"
+   let &hlsearch=oldhlsearch
+endfunction
+
+command! -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
+command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
+nnoremap <F12> :ShowSpaces 1<CR>
+nnoremap <S-F12> m`:TrimSpaces<CR>``
+vnoremap <S-F12> :TrimSpaces<CR>
+
+"-------------------statusline--------------------
+set laststatus=2
+set statusline=
+set statusline+=%#PmenuSel#
+set statusline+=%#LineNr#
+set statusline+=\ %f
+set statusline+=%m\
+set statusline+=%=
+set statusline+=%#CursorColumn#
+set statusline+=\ %y
+set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
+set statusline+=\[%{&fileformat}\] 
+set statusline+=\ %p%%
+set statusline+=\ %l:%c
+
+" ---------move lines schortcuts-----------
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+" inoremap <A-j> <Esc>:m .+1<CR>==gi
+" inoremap <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
+
+
