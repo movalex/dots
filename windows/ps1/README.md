@@ -1,1 +1,1 @@
-Get global Powershell profile path with `$PROFILE.CurrentUserAllHosts`
+Get local Powershell profile path with `$PROFILE.CurrentUserAllHosts`
