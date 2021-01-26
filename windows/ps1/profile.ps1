@@ -4,6 +4,10 @@ function which($cmd) {
     Get-Command $cmd | % { $_.Path }    
     }
 
+function grep {
+  $input | out-string -stream | select-string $args
+}
+
 # Shows navigable menu of all options when hitting Tab
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 
