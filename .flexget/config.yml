@@ -1,0 +1,195 @@
+variables: secrets.yml
+
+templates:
+  trm: 
+    transmission: &trm_settings  
+      host: localhost
+      port: 9091
+      username: '{? trm.username ?}' 
+      password: '{? trm.password ?}'
+      ratio: 0.5 
+  deluge_rt:
+    deluge:
+      ratio: 1
+      # port: 58846
+      # username: '{? deluge.username ?}' 
+      # password: '{? deluge.password ?}'
+      path: /Volumes/Elements/TVShows/{{ series_name }}
+      # move_completed_path: /Volumes/Elements/TVShows/{{ series_name }}
+  rutracker:
+# ------VPN setup------
+    exec:
+      on_filter:
+        for_accepted: /Users/barney/git/myscripts/deluge_vpn.sh
+      on_exit:
+        phase: source /Users/barney/.zshrc && uvpn stop
+# ------VPN setup------
+    rutracker_auth:
+      username: '{? rutracker.username ?}'
+      password: '{? rutracker.password ?}'
+    series:
+      settings:
+        group720:
+          set:
+            qualities:
+              - 720p
+              - hdrip
+        group1080:
+          season_packs: yes    
+          quality: 1080p
+      #group720:
+#        - Trust
+#        - Chernobyl
+      # group1080:
+      #     - Schitt's Creek:
+      #        season_packs: yes    
+    regexp:
+      reject:
+        - Trust(?!.*Jaskier)
+        - Legion(?!.*Jaskier)
+        - Yellowstone(?!.*Jaskier)
+        - Chernobyl(?!.*Alexfilm)
+ 
+  soap4me:
+    seen: local
+    series:
+      settings:
+        newcomers:
+          from_group: NewComers
+          quality: 1080p
+        srtgroup:
+          from_group: Субтитры
+          quality: 1080p
+        nickelodeon:
+          from_group: Nickelodeon
+          quality: 1080p
+        kurajgroup:
+          from_group: "Кураж Бамбей"
+          quality: 1080p
+        cubegroup:
+          from_group: "Кубик в Кубе"
+          quality: 1080p
+        alexgroup:
+          from_group: "AlexFilm"
+          quality: 1080p
+      srtgroup:
+        - Better Call Saul
+        - The Expanse
+        - Star Trek Picard
+        - Disenchantment
+        - The Big Bang Theory
+        - The X-Files
+        - DARK
+        - Westworld
+        - The Mandalorian
+        - Stranger Things
+        - Raised by Wolves
+        - Lovecraft Country
+        - Star Trek Lower Decks
+      cubegroup:
+        - Silicon Valley 
+      kurajgroup:
+        - Young Sheldon
+      # nickelodeon:
+      #   - SpongeBob SquarePants:
+      #       path: /Volumes/Elements/Multseries/{{ series_name }}
+          
+tasks:
+  tv1:
+    seen: local
+    rss: http://feed.rutracker.cc/atom/f/2366.atom 
+    manipulate:
+      - title:
+          replace:
+            regexp: '^.*?\/\s(.*?)\/\sСезон: (\d{1,2})(.*)$'
+            format: '\1- Season \2 - \3'
+    template:
+      - rutracker
+      - deluge_rt 
+  showrss:
+    rss: http://showrss.info/user/88950.rss?magnets=true&namespaces=true&name=null&quality=null&re=null 
+    all_series: yes 
+    #all_series:
+      #season_packs: yes
+    template:
+      - trm
+    set:  
+      path: /Volumes/Elements/TVTEMP
+  soap:
+    disable: retry_failed
+    seen: local
+    rss: '{? soap4me.url ?}'
+    headers:
+      User-Agent: 'Mozilla/5.0 (Windows NT 5.1; rv:16.0) Gecko/20100101 Firefox/16.0'
+    manipulate:
+      - title:
+          replace:
+            regexp: '(.+)/.*(\d{2}).*(\d{2}).*/(.+)\s/.*:\s{1,2}(.+),.*:\s(.+)' 
+            format: '[\5] \1 - \4, (S\2E\3) \6TV'
+      - title:
+          replace:
+            regexp: 'fullHDTV'
+            format: '1080p'
+    template:
+      - soap4me
+    transmission:
+      <<: *trm_settings
+      ratio: 0.3 
+    set:  
+      # path: /Volumes/Elements/TVShows/{{ series_name }} 
+      path: /Volumes/Elements/TVTEMP/
+
+  sort:
+    disable: 
+      - seen
+    filesystem:
+      path: /Volumes/Elements/TVTEMP/SORT
+      recursive: yes
+      retrieve:
+        - files
+        - dirs
+      regexp: '.*\.(avi|mkv|mp4|m4v)$'
+    all_series:
+      parse_only: yes
+    accept_all: yes
+    regexp:
+      reject:
+        - '.*sample.*'
+    # metainfo_series: yes
+    thetvdb_lookup: yes
+    tmdb_lookup: yes 
+    # series:
+    #   settings:
+    #     tvdbgroup:
+    #       parse_only: yes
+      # tvdbgroup:
+      #   - The Tonight Show Starring Jimmy Fallon:
+      #       identified_by: date
+      #       set:
+      #         tvdb_id: 270261
+      #   - Mr. Robot:
+      #       set:
+      #         tvdb_id: 289590
+    # set:
+    #   content_filename: "{{ series_name  }} - {{ series_id  }} - {{ tvdb_ep_name|default('UnknownName')  }}  - {{ quality|upper  }}"
+    require_field: 
+      # - tvdb_season
+      # - tmdb_id
+      - series_name
+      - series_season
+
+    move:
+      to: '/Volumes/Elements/TVShows/{{ series_name }}/Season {{ series_season }}'
+      # rename: '{{series_name}} - {{ series_id }} - {{ tvdb_ep_name|pad(2) }}'
+      rename: '{{series_name}} - {{ series_id }} - {{ tvdb_ep_name|pad(2) }}'
+      along:
+        extensions:
+          - srt
+        subdirs:
+          - Subs
+      clean_source: 500
+
+schedules:
+  - tasks: [showrss, soap]
+    interval:
+      hours: 4
