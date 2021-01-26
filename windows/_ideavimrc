@@ -1,0 +1,79 @@
+set nu
+set autochdir
+set linespace=6
+set encoding=utf-8
+set fileencoding=utf-8
+set noswapfile
+set nobackup
+set noundofile
+set wrap
+set wrapmargin=0
+set linebreak
+
+" ---------------------------------------------------
+" configure editor with tabs and nice stuff...
+" ---------------------------------------------------
+set tabstop=4
+set expandtab
+set softtabstop=4
+set shiftwidth=4
+set textwidth=120
+
+" ideavim
+set multiple-cursors " use alt+click to set multtiple cursors
+" Commands: <A-n>, <A-x>, <A-p>, g<A-n>
+set surround
+" Commands: ys, cs, ds, S
+
+
+
+"resets the _last search pattern_ register by hitting return
+nmap <cr> :noh<cr>
+
+
+" copy paste
+set clipboard^=unnamed,unnamedplus
+
+if has("clipboard")
+    " CTRL-X and SHIFT-Del are Cut
+    vnoremap <C-X> "+x
+    " vnoremap <S-Del> "+x
+    " CTRL-C and CTRL-Insert are Copy
+    vnoremap <C-C> "+y
+    " vnoremap <C-Insert> "+y
+    " CTRL-V and SHIFT-Insert are Paste
+    map <C-V>		"+gP
+    " map <S-Insert>		"+gP
+    inoremap <ESC><C-V> "+gP
+    cmap <C-V>		<C-R>+
+    " cmap <S-Insert>		<C-R>+
+
+
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+
+filetype on
+filetype plugin indent on
+set nofoldenable    " disable folding
+
+let mapleader = ','
+
+" search
+
+set ignorecase
+set cmdheight=1
+set hlsearch
+set incsearch
+set encoding=utf8
+
+
+"search-replace current word
+
+nnoremap <Leader>g :%s/\<<C-r><C-w>\>/
+
+" ideavim plugins
+"
+set surround
+set multiple-cursors
+set commentary

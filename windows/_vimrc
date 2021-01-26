@@ -1,6 +1,9 @@
 syntax on
 colorscheme atom-dark-256
 set nocp
+autocmd FileType python map <buffer> <F5> :w<CR>:exec '!python' shellescape(@%, 1)<CR>
+autocmd Syntax * call SyntaxRange#Include('//begin=glsl//', '//end=glsl//', 'glsl', 'NonText')
+
 autocmd BufNewFile,BufRead *.yml set tabstop=2
 autocmd BufNewFile,BufRead *.fuse set filetype=lua
 autocmd BufNewFile,BufRead *.comp set filetype=lua
@@ -9,10 +12,14 @@ autocmd BufNewFile,BufRead *.layout set filetype=lua
 autocmd BufNewFile,BufRead *.atom set filetype=lua
 autocmd BufNewFile,BufRead *.scriptlib set filetype=lua
 au BufRead,BufNewFile *.md setlocal textwidth=40
-nmap <F5> :w:py3file % <cr>
 nmap <F11> :!start explorer /e,%:p:h<CR>
 
-" paste yanked clipboard
+set noerrorbells visualbell t_vb=
+
+if has('autocmd')
+  autocmd GUIEnter * set visualbell t_vb=
+endif
+
 set clipboard^=unnamed,unnamedplus
 
 
@@ -108,29 +115,33 @@ set imsearch=0                  " default english search
 " - For Neovim: ~/.local/share/nvim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('$HOME/vimfiles/plugged')
+" Plug 'JamshedVesuna/vim-markdown-preview'
+" Plug 'airblade/vim-gitgutter'
 " Plug 'cakebaker/scss-syntax.vim'
 " Plug 'chrisbra/Colorizer'
 " Plug 'henrik/vim-reveal-in-finder'
+" Plug 'lepture/vim-jinja'
+" Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+" Plug 'python-mode/python-mode'
+" Plug 'severin-lemaignan/vim-minimap'
+" Plug 'thaerkh/vim-workspace'
 " Plug 'udalov/kotlin-vim'
 " Plug 'vim-airline/vim-airline-themes'
-" Plug 'JamshedVesuna/vim-markdown-preview'
-" Plug 'airblade/vim-gitgutter'
-Plug 'psf/black'
+Plug 'inkarkat/vim-SyntaxRange'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'Galicarnax/vim-regex-syntax'
 Plug 'honza/vim-snippets'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/gv.vim'
-" Plug 'lepture/vim-jinja'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'plytophogy/vim-virtualenv'
-Plug 'python-mode/python-mode'
 Plug 'PProvost/vim-ps1'
+Plug 'psf/black'
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
-" Plug 'severin-lemaignan/vim-minimap'
 Plug 'SirVer/ultisnips'
-" Plug 'thaerkh/vim-workspace'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -139,8 +150,7 @@ Plug 'unkiwii/vim-nerdtree-sync'
 Plug 'Valloric/YouCompleteMe'
 Plug 'vim-scripts/AutoClose'
 Plug 'wakatime/vim-wakatime'
-" Plug 'neoclide/coc.nvim',
-  "{'tag': '*', 'do': { -> coc#util#install()}}
+Plug 'movalex/vim-dctl'
 
 
 
@@ -195,7 +205,7 @@ let g:pymode_lint_options_pep8 =
 let g:pymode_rope_completion = 0
 let g:pymode_rope_autoimport = 0
 let g:pymode_options_colorcolumn = 0
-set pythonthreedll=C:\Users\abogomolov\AppData\Local\Programs\Python\Python36\python36.dll
+set pythonthreedll=C:\Users\videopro\AppData\Local\Programs\Python\Python36\python36.dll
 
 "--------- YCM completer ----------"
 
@@ -204,7 +214,7 @@ let g:ycm_semantic_triggers = {
             \ 'python': ['re!\w{2}']
             \ }
 
-" ---------nerd commenter options-----------
+" ---------nerd commenter optaons-----------
 let g:NERDSpaceDelims = 1
 let g:NERDDefaultAlign = 'left'
 let g:NERDCustomDelimiters = {
@@ -244,6 +254,7 @@ map <F6> :NERDTreeToggle<CR>
 
 
 " ---------toggle relative numbering-----------
+
 function! g:ToggleNuMode()
   if (&rnu == 1)
      set nornu
@@ -251,7 +262,7 @@ function! g:ToggleNuMode()
     set rnu
   endif
 endfunction
-nnoremap <silent><c-l> :call g:ToggleNuMode()<cr>
+nnoremap <C-l> :call g:ToggleNuMode()<cr>
 
 " do not comment inserted line
 set formatoptions-=r
