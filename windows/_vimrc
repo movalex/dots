@@ -145,6 +145,7 @@ Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
+Plug 'iamcco/markdown-preview.vim'
 Plug 'tpope/vim-surround'
 Plug 'unkiwii/vim-nerdtree-sync'
 Plug 'Valloric/YouCompleteMe'
@@ -205,7 +206,7 @@ let g:pymode_lint_options_pep8 =
 let g:pymode_rope_completion = 0
 let g:pymode_rope_autoimport = 0
 let g:pymode_options_colorcolumn = 0
-set pythonthreedll=C:\Users\videopro\AppData\Local\Programs\Python\Python36\python36.dll
+set pythonthreedll=C:\Users\abogomolov\AppData\Local\Programs\Python\Python36\python36.dll
 
 "--------- YCM completer ----------"
 
@@ -252,6 +253,22 @@ let NERDTreeDirArrows = 1
 " ---------toggle nerdtree-----------
 map <F6> :NERDTreeToggle<CR>
 
+
+" ---------Open URL-----------
+
+function! HandleURL()
+  let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;()]*')
+  let s:uri = shellescape(s:uri, 1)
+  echom s:uri
+  if s:uri != ""
+    silent execute '!explorer "'.s:uri.'"'
+    :redraw!
+  else
+    echo "No URI found in line."
+  endif
+endfunction
+
+nnoremap <leader>o :call HandleURL()<CR>¬
 
 " ---------toggle relative numbering-----------
 
@@ -333,5 +350,6 @@ nnoremap <A-k> :m .-2<CR>==
 " inoremap <A-k> <Esc>:m .-2<CR>==gi
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
+
 
 
