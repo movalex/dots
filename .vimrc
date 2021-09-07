@@ -47,7 +47,7 @@ set formatoptions-=ro
 " --------- set python path  -----------
 " set pythonthreehome=/Users/videopro/.pyenv/versions/3.6.8/Python.framework/Versions/3.6
 " set pythonthreedll=$HOME/.pyenv/versions/3.6.8/Python.framework/Versions/Current/lib/libpython3.6m.dylib
-set pythonthreedll=/Library/Frameworks/Python.framework/Versions/3.6/lib/libpython3.6m.dylib
+" set pythonthreedll=/Library/Frameworks/Python.framework/Versions/3.6/lib/libpython3.6m.dylib
 " set pythonthreedll=$HOME/.pyenv/versions/4.7.6/Python.framework/Versions/Current/lib/libpython3.7m.dylib
 
 "--------- map ALP+K and ALT+J for terminal vim -----------
@@ -85,7 +85,7 @@ iab fir for
 " --------- Macros ----------- 
 let @a='i"  20i-10hi  h i'
 " --------- Plugins ----------- 
-call plug#begin('~/.vim/bundle/plugged')
+call plug#begin('~/.vim/plugged')
 " Plug 'cakebaker/scss-syntax.vim'
 " Plug 'chrisbra/Colorizer'
 " Plug 'lepture/vim-jinja'
@@ -97,9 +97,9 @@ call plug#begin('~/.vim/bundle/plugged')
 Plug 'vim-python/python-syntax'
 " Plug 'VundleVim/Vundle.vim'
 " post install (yarn install | npm install) then load plugin only for editing supported files
-Plug 'prettier/vim-prettier', {
-  \ 'do': 'yarn install',
-  \ 'for': ['javascript', 'css', 'less', 'scss', 'python', 'json', 'markdown', 'yaml', 'html'] }
+" Plug 'prettier/vim-prettier', {
+"   \ 'do': 'yarn install',
+"   \ 'for': ['javascript', 'css', 'less', 'scss', 'python', 'json', 'markdown', 'yaml', 'html'] }
 Plug 'airblade/vim-gitgutter'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'vim-python/python-syntax'
@@ -122,7 +122,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'unkiwii/vim-nerdtree-sync'
-Plug 'Valloric/YouCompleteMe'
+" Plug 'Valloric/YouCompleteMe'
 Plug 'wakatime/vim-wakatime'
 call plug#end()
 
