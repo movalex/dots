@@ -103,7 +103,7 @@ iab fir for
 " --------- Macros ----------- 
 let @a='i"  20i-10hi  h i'
 " --------- Plugins ----------- 
-call plug#begin('~/.vim/bundle/plugged')
+call plug#begin('~/.vim/plugged')
 " Plug 'cakebaker/scss-syntax.vim'
 " Plug 'chrisbra/Colorizer'
 " Plug 'lepture/vim-jinja'
@@ -139,7 +139,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'unkiwii/vim-nerdtree-sync'
-Plug 'vim-python/python-syntax'
 Plug 'wakatime/vim-wakatime'
 call plug#end()
 "-------- Vundle end -------"

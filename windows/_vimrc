@@ -1,6 +1,9 @@
 syntax on
 colorscheme atom-dark-256
 set nocp
+autocmd FileType python map <buffer> <F5> :w<CR>:exec '!python' shellescape(@%, 1)<CR>
+autocmd Syntax * call SyntaxRange#Include('//begin=glsl//', '//end=glsl//', 'glsl', 'NonText')
+
 autocmd BufNewFile,BufRead *.yml set tabstop=2
 autocmd BufNewFile,BufRead *.fuse set filetype=lua
 autocmd BufNewFile,BufRead *.comp set filetype=lua
@@ -9,10 +12,14 @@ autocmd BufNewFile,BufRead *.layout set filetype=lua
 autocmd BufNewFile,BufRead *.atom set filetype=lua
 autocmd BufNewFile,BufRead *.scriptlib set filetype=lua
 au BufRead,BufNewFile *.md setlocal textwidth=40
-nmap <F5> :w:py3file % <cr>
 nmap <F11> :!start explorer /e,%:p:h<CR>
 
-" paste yanked clipboard
+set noerrorbells visualbell t_vb=
+
+if has('autocmd')
+  autocmd GUIEnter * set visualbell t_vb=
+endif
+
 set clipboard^=unnamed,unnamedplus
 
 
@@ -108,39 +115,43 @@ set imsearch=0                  " default english search
 " - For Neovim: ~/.local/share/nvim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('$HOME/vimfiles/plugged')
+" Plug 'JamshedVesuna/vim-markdown-preview'
+" Plug 'airblade/vim-gitgutter'
 " Plug 'cakebaker/scss-syntax.vim'
 " Plug 'chrisbra/Colorizer'
 " Plug 'henrik/vim-reveal-in-finder'
+" Plug 'lepture/vim-jinja'
+" Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+" Plug 'python-mode/python-mode'
+" Plug 'severin-lemaignan/vim-minimap'
+" Plug 'thaerkh/vim-workspace'
 " Plug 'udalov/kotlin-vim'
 " Plug 'vim-airline/vim-airline-themes'
-" Plug 'JamshedVesuna/vim-markdown-preview'
-" Plug 'airblade/vim-gitgutter'
-Plug 'psf/black'
+Plug 'inkarkat/vim-SyntaxRange'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'Galicarnax/vim-regex-syntax'
 Plug 'honza/vim-snippets'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/gv.vim'
-" Plug 'lepture/vim-jinja'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'plytophogy/vim-virtualenv'
-Plug 'python-mode/python-mode'
 Plug 'PProvost/vim-ps1'
+Plug 'psf/black'
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
-" Plug 'severin-lemaignan/vim-minimap'
 Plug 'SirVer/ultisnips'
-" Plug 'thaerkh/vim-workspace'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
+Plug 'iamcco/markdown-preview.vim'
 Plug 'tpope/vim-surround'
 Plug 'unkiwii/vim-nerdtree-sync'
 Plug 'Valloric/YouCompleteMe'
 Plug 'vim-scripts/AutoClose'
 Plug 'wakatime/vim-wakatime'
-" Plug 'neoclide/coc.nvim',
-  "{'tag': '*', 'do': { -> coc#util#install()}}
+Plug 'movalex/vim-dctl'
 
 
 
@@ -204,7 +215,7 @@ let g:ycm_semantic_triggers = {
             \ 'python': ['re!\w{2}']
             \ }
 
-" ---------nerd commenter options-----------
+" ---------nerd commenter optaons-----------
 let g:NERDSpaceDelims = 1
 let g:NERDDefaultAlign = 'left'
 let g:NERDCustomDelimiters = {
@@ -243,7 +254,24 @@ let NERDTreeDirArrows = 1
 map <F6> :NERDTreeToggle<CR>
 
 
+" ---------Open URL-----------
+
+function! HandleURL()
+  let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;()]*')
+  let s:uri = shellescape(s:uri, 1)
+  echom s:uri
+  if s:uri != ""
+    silent execute '!explorer "'.s:uri.'"'
+    :redraw!
+  else
+    echo "No URI found in line."
+  endif
+endfunction
+
+nnoremap <leader>o :call HandleURL()<CR>¬
+
 " ---------toggle relative numbering-----------
+
 function! g:ToggleNuMode()
   if (&rnu == 1)
      set nornu
@@ -251,7 +279,7 @@ function! g:ToggleNuMode()
     set rnu
   endif
 endfunction
-nnoremap <silent><c-l> :call g:ToggleNuMode()<cr>
+nnoremap <C-l> :call g:ToggleNuMode()<cr>
 
 " do not comment inserted line
 set formatoptions-=r
@@ -322,5 +350,6 @@ nnoremap <A-k> :m .-2<CR>==
 " inoremap <A-k> <Esc>:m .-2<CR>==gi
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
+
 
 
