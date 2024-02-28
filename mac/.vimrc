@@ -4,8 +4,17 @@ set cursorline
 set hlsearch
 set incsearch
 set noswapfile
- " --------- set pwd to local directory for all files -----------
+set clipboard^=unnamed,unnamedplus
+set title
+
+" --------- set pwd to local directory for all files -----------
 set autochdir
+
+au! BufEnter *.py syn match specialComment /#!!.*/  " Python files (*.py)
+
+
+" make backspaces more powerfull
+set backspace=indent,eol,start
 
 set guioptions-=r
 set guioptions-=L
@@ -17,27 +26,34 @@ set encoding=UTF-8
 set showcmd   
 syntax enable
 
-" --------- open in firefox ----------- 
-noremap <F10> :!open -a Firefox %<CR>
+autocmd Syntax * call SyntaxRange#Include('//begin=glsl//', '//end=glsl//', 'glsl', 'NonText')
+autocmd Syntax * call SyntaxRange#Include('--begin=lua--', '--end=lua--', 'lua', 'NonText')
+
 " --------- folding method ----------- 
 set foldmethod=manual 
 " set guifont=Menlo\ Regular:h15
 " set guifont=Fira\ Code\ Retina:h15
+
 set guifont=Hack\ Nerd\ Font:h15
 let mapleader = ','
 nnoremap <leader>w :ToggleWorkspace<CR>
+
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
 nnoremap n nzzzv
 nnoremap N Nzzzv
+
 "--------- vmap move indent -----------
 vmap > >gv
 vmap < <gv
+
 "--------- set spellcheck -----------
 imap <Leader>l <C-o>:setlocal spell! spelllang=ru_ru,en_us<CR>
 nnoremap <Leader>l :setlocal spell! spelllang=ru_ru,en_us<CR>
+
 " --------- do not move comment on new line  -----------
 set formatoptions-=ro
+
 "--------- session management  -----------" 
 " let g:session_directory = "~/.vim/session"
 " let g:session_autoload = "no"
@@ -47,10 +63,10 @@ set formatoptions-=ro
 " --------- set python path  -----------
 " set pythonthreehome=/Users/videopro/.pyenv/versions/3.6.8/Python.framework/Versions/3.6
 " set pythonthreedll=$HOME/.pyenv/versions/3.6.8/Python.framework/Versions/Current/lib/libpython3.6m.dylib
-set pythonthreedll=/Library/Frameworks/Python.framework/Versions/3.6/lib/libpython3.6m.dylib
+" set pythonthreedll=/Library/Frameworks/Python.framework/Versions/3.6/lib/libpython3.6m.dylib
 " set pythonthreedll=$HOME/.pyenv/versions/4.7.6/Python.framework/Versions/Current/lib/libpython3.7m.dylib
 
-"--------- map ALP+K and ALT+J for terminal vim -----------
+"--------- map ALT+K and ALT+J for terminal vim -----------
 nnoremap ˚ :m .+1<CR>== 
 nnoremap ∆ :m .-2<CR>==
 
@@ -62,7 +78,9 @@ nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
 let vim_markdown_preview_github=1
 
+" ----- clear search --- 
 noremap <CR><CR> :noh<CR>
+
 " --------- activate visual on shift-V -----------
 nmap <S-down> V 
 nmap <S-up> V
@@ -85,33 +103,32 @@ iab fir for
 " --------- Macros ----------- 
 let @a='i"  20i-10hi  h i'
 " --------- Plugins ----------- 
-call plug#begin('~/.vim/bundle/plugged')
+call plug#begin('~/.vim/plugged')
 " Plug 'cakebaker/scss-syntax.vim'
 " Plug 'chrisbra/Colorizer'
 " Plug 'lepture/vim-jinja'
 " Plug 'maksimr/vim-jsbeautify'
 " Plug 'mileszs/ack.vim'
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'css', 'python', 'json', 'markdown', 'yaml', 'html', 'xml'] }
+" Plug 'psf/black'
+" Plug 'ryanoasis/vim-devicons'
 " Plug 'sonph/onehalf', {'rtp': 'vim/'}
+" Plug 'tikhomirov/vim-glsl'
 " Plug 'udalov/kotlin-vim' 
 " Plug 'vim-airline/vim-airline-themes'
-Plug 'vim-python/python-syntax'
-" Plug 'VundleVim/Vundle.vim'
-" post install (yarn install | npm install) then load plugin only for editing supported files
-Plug 'prettier/vim-prettier', {
-  \ 'do': 'yarn install',
-  \ 'for': ['javascript', 'css', 'less', 'scss', 'python', 'json', 'markdown', 'yaml', 'html'] }
+" Plug 'ycm-core/YouCompleteMe'
 Plug 'airblade/vim-gitgutter'
-Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'vim-python/python-syntax'
-Plug 'ambv/black'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'Galicarnax/vim-regex-syntax' 
 Plug 'henrik/vim-reveal-in-finder'
 Plug 'honza/vim-snippets'
+Plug 'inkarkat/vim-SyntaxRange'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'jiangmiao/auto-pairs'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+Plug 'movalex/vim-dctl'
 Plug 'plytophogy/vim-virtualenv'
-Plug 'python-mode/python-mode', { 'for': 'python3' }
-Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
 Plug 'severin-lemaignan/vim-minimap'
@@ -122,12 +139,12 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'unkiwii/vim-nerdtree-sync'
-Plug 'Valloric/YouCompleteMe'
 Plug 'wakatime/vim-wakatime'
 call plug#end()
+"-------- Vundle end -------"
 
-" call vundle#end()
-" Snippets are separated from the engine. Add this if you want them:
+" --------- vim python syntax ----------- 
+let g:python_highlight_all = 1
 
 " ---------set ctrlp ignore home dir-----------
 if executable('ag')
@@ -139,8 +156,6 @@ let g:ctrlp_custom_ignore = {
   \ }
 " ----------ctrlp start in MRU---------
 let g:ctrlp_cmd = 'CtrlPMRU'
-" ----------ctrlp help ---------
-" helptags ~/.vim/bundle/ctrlp.vim/doc
 
 " --------- MiniMap ----------- 
 let g:minimap_show='<leader>mm'
@@ -157,38 +172,24 @@ let g:ycm_semantic_triggers = {
             \ }
 
 "--------- Ultisnips snippets -----------
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-" let g:UltiSnipsExpandTrigger="<tab>"
-"
+" Trigger configuration.
+" Do not use <tab> to UltiSnipsExpandTrigger if you use YouCompleteMe
+
 " UltiSnips triggering
-let g:UltiSnipsExpandTrigger = '<C-j>'
-let g:UltiSnipsJumpForwardTrigger = '<C-j>'
-let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
+let g:UltiSnipsExpandTrigger="<c-tab>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsListSnippets="<c-s-tab>"
+" let g:UltiSnipsExpandTrigger = '<C-j>'
+" let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
+" let g:UltiSnipsJumpForwardTrigger = '<C-l>'
 " let g:UltiSnipsEditSplit="vertical" " If you want :UltiSnipsEdit to split your window.
 
-" let g:UltiSnipsExpandTrigger="<c-tab>"
-" let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-" let g:UltiSnipsJumpForwardTrigger="<c-b>"
-
-"--------- pymode -----------
-let g:pymode_python = 'python3'
-let g:pymode_lint_ignore = ["E501","W"]
-" let g:pymode_lint_ignore = ["E0602","E501","W"]
-let g:pymode_rope = 0
-let g:pymode_lint_options_pep8 =
-        \ {'max_line_length': 88}
-let g:pymode_rope_rename_bind = '<Leader>rr'
-let g:pymode_rope_module_to_package_bind = '<Leader>r1p'
-let g:pymode_rope_completion = 0
-let g:pymode_rope_autoimport = 1
-let g:pymode_options_colorcolumn = 0
     
 " --------- hilight f-strings ----------- 
 let g:python_highlight_all = 1
 
 "--------- nerd commenter conf -----------
-
 nnoremap <Leader>f :NERDTreeFind<CR>
 
 let g:NERDSpaceDelims = 1
@@ -197,30 +198,37 @@ let NERDDefaultAlign = 'left'
 let g:NERDCustomDelimiters = {
       \ 'python': { 'left': '#', 'right': '' }
       \ }
+
+"--------- nerd tree conf -----------
 let NERDTreeIgnore = [
             \ '\.DS_Store$',
             \ '.git',
             \ '__pycache__',
-            \ '__pycache__',
-            \ '.ropeproject'
             \ ]
 let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
 let g:NERDTreeHighlightCursorline = 1
 let g:NERDTreeWinSize = 28     
 let NERDTreeQuitOpen = 1
-let NERDTreeAutoDeleteBuffer = 1            "detele buffer of deleted file
-"--------- autoclose if NT is the last window -----------
+let NERDTreeAutoDeleteBuffer = 1 " detele buffer of deleted file
+" autoclose if NT is the last window -----------
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-"--------- prettify nerdtree -----------
+" prettify nerdtree -----------
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 
 filetype indent plugin on
 
-"-------- Vundle end -------"
-nmap <F5>  :w:!python3 % <cr>
+" nmap <F5>  :w:!python3 % <cr>
+
+autocmd BufRead *.py nnoremap <buffer> <F5> :wa<CR> :exec '!python3' shellescape(@%, 1)<cr>
+autocmd BufRead *.cpp nnoremap <buffer> <F9> :wa<CR> :!g++ % -o %< && ./%< && rm %<<CR>
+autocmd BufRead *.c nnoremap <buffer> <F9> :wa<CR> :!gcc % -o %< && ./%< && rm %<<CR>
+
 nmap <F6>  :NERDTreeToggle<CR>
 nmap <F7>  :terminal<CR><C-W>j<CR><C-W>R<CR><C-W>12+<CR><C-W>j
+" --------- open in firefox ----------- 
+noremap <F10> :!open -a Firefox %<CR>
+
 let NERDTreeShowHidden=1
 
 "-------------- tabs ---------------"
@@ -236,20 +244,15 @@ set imsearch=0                  " default english search
 
 "--------- auto sudo -----------"
 cmap w!! w !sudo tee % > /dev/null %
-"-------------- lua fusion ----------"
-au BufReadPost *.fu set filetype=lua
-au BufReadPost *.fuse set filetype=lua
-au BufReadPost *.atom set filetype=lua
-au BufReadPost *.layout set filetype=lua
-au BufReadPost *.setting set filetype=lua
-au BufReadPost *.scriptlib set filetype=lua
-au BufReadPost *.eyeonscript set filetype=lua
-au BufReadPost *.conf set filetype=dosini
 
-autocmd BufNewFile,BufRead *.json set ft=javascript
-autocmd FileType vim set shiftwidth=2
-autocmd FileType yaml set shiftwidth=2
-" ------------------------------
+"-------------- autocommands Fusion ----------"
+au BufReadPost *.fu,*.fuse,*.comp,*.setting,*.scriptlib,*.eyeonscript,*.atom  set filetype=lua
+au BufReadPost *.conf set filetype=conf
+
+au FileType vim set shiftwidth=2
+au FileType yaml set shiftwidth=2
+
+
 " use Ctrl+L to toggle the line number counting method
 function! g:ToggleNuMode()
   if (&rnu == 1)
@@ -258,16 +261,13 @@ function! g:ToggleNuMode()
     set rnu
   endif
 endfunction
-nnoremap <silent><c-l> :call g:ToggleNuMode()<cr>
 
-" Toggle 'default' terminal
-nnoremap <M-T> :call ChooseTerm("term-slider", 1)<CR>
-" Start terminal in current pane
-nnoremap <M-CR> :call ChooseTerm("term-pane", 0)<CR>
+nnoremap <silent><c-l> :call g:ToggleNuMode()<cr>
 
 
 if has("gui_running")
 "--------- macvim statusline -----------
+
   colorscheme atom-dark
   let g:webdevicons_conceal_nerdtree_brackets = 1
 
@@ -301,23 +301,11 @@ endfunction
 
 function! InactiveStatus()
   let statusline=""
-  " let statusline.="%(%{'help'!=&filetype?'\ \ '.bufnr('%').'\ \ ':'\ '}%)"
-  " let statusline.="%{fugitive#head()!=''?'\ \ '.fugitive#head().'\ ':'\ '}"
-  " let statusline.="\ %<"
-  " let statusline.="%f"
-  " let statusline.="%{&modified?'\ \ +':''}"
-  " let statusline.="%{&readonly?'\ \ ':''}"
-  " let statusline.="%="
-  " let statusline.="\ %{''!=#&filetype?&filetype:'none'}"
-  " let statusline.="%(\ %{(&bomb\|\|'^$\|utf-8'!~#&fileencoding?'\ '.&fileencoding.(&bomb?'-bom':''):'').('unix'!=#&fileformat?'\ '.&fileformat:'')}%)"
-  " let statusline.="%(\ \ %{&modifiable?(&expandtab?'et\ ':'noet\ ').&shiftwidth:''}%)"
-  " let statusline.="\ \ "
-  " let statusline.="\ %2v"
-  " let statusline.="\ %3p%%\ "
   return statusline
 endfunction
-" set laststatus=2
+
 set statusline=%!ActiveStatus()
+
 hi User1 guibg=#afd700 guifg=#005f00
 hi User2 guibg=#005f00 guifg=#afd700
 hi User3 guibg=#222222 guifg=#005f00
@@ -337,6 +325,7 @@ augroup status
   autocmd ColorScheme kalisi if(&background=="light") | hi User4 guibg=#707070 guifg=#d0d0d0 | endif
   let g:NERDTreeStatusline = '%#NonText#'
 augroup END
+
 augroup nerdtreehidecwd
     autocmd!
     autocmd FileType nerdtree setlocal conceallevel=3 | syntax match NERDTreeHideCWD #^[</].*$# conceal
@@ -346,13 +335,7 @@ augroup end
   let g:webdevicons_enable = 1
   let g:webdevicons_enable_nerdtree = 1
   inoremap <C-Space> <C-n>
-  " --------- map move lines  -----------
-  nnoremap <A-j> :m .+1<CR>==
-  nnoremap <A-k> :m .-2<CR>==
-  inoremap <A-j> <Esc>:m .+1<CR>==gi
-  inoremap <A-k> <Esc>:m .-2<CR>==gi
-  vnoremap <A-j> :m '>+1<CR>gv=gv
-  vnoremap <A-k> :m '<-2<CR>gv=gv
+
   set macligatures
   au BufReadPost *.html set nomacligatures
   set macmeta
@@ -372,12 +355,16 @@ augroup end
   noremap <D-9> :tabn 9<CR>
   " Command-0 goes to the last tab
   noremap <D-0> :tablast<CR>
-else 
+
+else " no gui found
+
 "--------- disable devicons for terminal -----------
   let g:webdevicons_enable = 0
   let g:webdevicons_enable_nerdtree = 0
+
   set t_Co=256
   colorscheme atom-dark-256
+
 "--------- shell statusline -----------
   set laststatus=2
   set statusline=
@@ -392,33 +379,13 @@ else
   set statusline+=\ %l:%c
 endif
 
-
-
-function! ChooseTerm(termname, slider)
-    let pane = bufwinnr(a:termname)
-    let buf = bufexists(a:termname)
-    if pane > 0
-        " pane is visible
-        if a:slider > 0
-            :exe pane . "wincmd c"
-        else
-            :exe "e #"
-        endif
-    elseif buf > 0
-        " buffer is not in pane
-        if a:slider
-            :exe "topleft split"
-        endif
-        :exe "buffer " . a:termname
-    else
-        " buffer is not loaded, create
-        if a:slider
-            :exe "topleft split"
-        endif
-        :terminal
-        :exe "f " a:termname
-    endif
-endfunction
+" ---------move lines schortcuts-----------
+nnoremap <C-j> :m .+1<CR>==
+nnoremap <C-k> :m .-2<CR>==
+" inoremap <C-j> <Esc>:m .+1<CR>==gi
+" inoremap <C-k> <Esc>:m .-2<CR>==gi
+vnoremap <C-j> :m '>+1<CR>gv=gv
+vnoremap <C-k> :m '<-2<CR>gv=gv
 
 
 function! ShowSpaces(...)
@@ -442,15 +409,16 @@ endfunction
 
 function! DeleteHiddenBuffers()
   let tpbl=[]
-  let closed = 0
+  let count_closed = 0
   call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
   for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
     if getbufvar(buf, '&mod') == 0
       silent execute 'bwipeout' buf
-      let closed += 1
+      let count_closed += 1
     endif
   endfor
-  echo "Closed ".closed." hidden buffers"
+  echo "Closed ".count_closed." hidden buffers"
 endfunction
+
 
 
