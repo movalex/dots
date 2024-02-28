@@ -1,4 +1,6 @@
 Set-Alias -name py3 -value ~\.virtualenvs\py3\Scripts\Activate.ps1
+Set-Alias -name python3 -value python
+Set-Alias -name pip -value "python -m pip3"
 
 function which($cmd) {
     Get-Command $cmd | % { $_.Path }    
@@ -14,8 +16,9 @@ Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
 # New-Alias <alias> <aliased-command>
 New-Alias open ii
 
-#region conda initialize
+# region conda initialize
 # !! Contents within this block are managed by 'conda init' !!
-# (& "C:\Users\videopro\miniconda3\Scripts\conda.exe" "shell.powershell" "hook") | Out-String | Invoke-Expression
-#endregion
 
+(& "C:\Users\videopro\miniconda3\Scripts\conda.exe" "shell.powershell" "hook") | Out-String | Invoke-Expression
+
+# endregion
