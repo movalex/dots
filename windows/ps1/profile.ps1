@@ -1,45 +1,6 @@
 # Set-Alias -name py3 -value ~\.virtualenvs\py10\Scripts\Activate.ps1
 Set-Alias -name python3 -value python
 
-# function pip {
-#     param(
-#         [Parameter(
-#             Mandatory=$True,
-#             Position = 0
-#         )]
-#         [string]
-#         $firstArg,
-     
-#         [Parameter(
-#             Mandatory=$False,
-#             ValueFromRemainingArguments=$true,
-#             Position = 1
-#         )][string[]]
-#         $listArgs
-#     )
-#     $count = 0
-#     if ($listArgs -ne $null) {
-#         if ($firstArg -ne "install") {
-#             return $null
-#         }
-#         foreach($listArg in $listArgs) {
-#             python -m pip $firstArg $listArg
-#             $count++
-#         }
-#         if ($count -gt 0) {
-#             if ($count -eq 1) {
-#                 $end = ""
-#             }
-#             elseif ($count -gt 1) {
-#                 $end = "s"
-#             }
-#         "`n`nInstalled {0} package{1}`n" -f $count, $end 
-#         }
-#     }
-#     else {
-#         python -m pip $firstArg
-#     }
-# }
 
 function which($cmd) {
     Get-Command $cmd | % { $_.Path }    
